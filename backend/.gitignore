@@ -1,0 +1,8 @@
+.env
+venv/
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite
+*.sqlite3
+ml/saved_model/old_experiments_backup/

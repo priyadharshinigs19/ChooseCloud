@@ -1,0 +1,29 @@
+
+# Environment secrets
+.env
+**/.env
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js
+node_modules/
+frontend/node_modules/
+
+# Build and cache
+dist/
+build/
+.parcel-cache/
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
