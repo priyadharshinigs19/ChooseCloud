@@ -9,6 +9,7 @@ import bcrypt
 import joblib
 import pandas as pd
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from decimal import Decimal, ROUND_HALF_UP
@@ -268,7 +269,7 @@ seed_providers()
 seed_services()
 
 
-@app.get("/")
+@app.get("/api/health")
 def home():
     return {
         "message": "Welcome to ChooseCloud API",
@@ -1235,3 +1236,11 @@ def get_logged_in_user(
         "name": current_user.name,
         "email": current_user.email
     }
+# Serve React frontend
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+
+app.mount(
+    "/",
+    StaticFiles(directory=STATIC_DIR, html=True),
+    name="frontend"
+)

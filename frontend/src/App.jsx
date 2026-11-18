@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://choosecloud-backend-dne6hsbmfxadfabz.indiasouthcentral-01.azurewebsites.net";
 
 function App() {
         // Authentication state
