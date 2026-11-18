@@ -268,6 +268,110 @@ def seed_services():
 seed_providers()
 seed_services()
 
+def seed_prices():
+    db = SessionLocal()
+
+    pricing_data = [
+        ("Amazon EC2", "Asia Pacific (Mumbai) - ap-south-1",
+         "t3.large | Linux | 2 vCPU | 8 GiB RAM | On-Demand",
+         "1 Hour", 0.0896, "USD", 94.1997,
+         "https://aws.amazon.com/ec2/pricing/on-demand/"),
+
+        ("Azure Virtual Machines", "Central India - centralindia",
+         "Standard_D2as_v5 | Linux | 2 vCPU | 8 GiB RAM | On-Demand",
+         "1 Hour", 0.0556, "USD", 94.1997,
+         "https://prices.azure.com/"),
+
+        ("Compute Engine", "Mumbai - asia-south1",
+         "e2-standard-2 | Linux | 2 vCPU | 8 GiB RAM | On-Demand",
+         "1 Hour", 0.08048436, "USD", 94.1997,
+         "https://cloud.google.com/products/compute/pricing/general-purpose"),
+
+        ("Amazon S3", "Asia Pacific (Mumbai) - ap-south-1",
+         "S3 Standard | Frequent Access | On-Demand",
+         "1 GB/Month", 0.025, "USD", 94.1997,
+         "https://aws.amazon.com/s3/pricing/"),
+
+        ("Azure Blob Storage", "Central India - centralindia",
+         "Blob Hot LRS | General Block Blob v2",
+         "1 GB/Month", 0.02, "USD", 94.1997,
+         "https://prices.azure.com/"),
+
+        ("Cloud Storage", "Mumbai - asia-south1",
+         "Cloud Storage Standard | Regional",
+         "1 GB/Month", 0.023, "USD", 94.1997,
+         "https://cloud.google.com/storage/pricing"),
+
+        ("Amazon RDS", "Asia Pacific (Mumbai) - ap-south-1",
+         "db.t3.large | 2 vCPU | 8 GiB | On-Demand | Single-AZ",
+         "1 Hour", 0.212, "USD", 94.1997,
+         "https://calculator.aws/"),
+
+        ("Azure Database for PostgreSQL", "Central India - centralindia",
+         "B2ms | 2 vCores | 8 GiB | Burstable | Single Server",
+         "1 Hour", 0.196, "USD", 94.1997,
+         "https://azure.microsoft.com/en-in/pricing/calculator/"),
+
+        ("Cloud SQL", "Mumbai - asia-south1",
+         "db-standard-2 | 2 vCPU | 7.5 GiB | Enterprise | Single Zone",
+         "1 Hour", 0.162205, "USD", 94.1997,
+         "https://cloud.google.com/products/calculator"),
+
+        ("Amazon RDS", "Asia Pacific (Mumbai) - ap-south-1",
+         "General Purpose SSD gp3 | 20 GB",
+         "1 GB/Month", 0.131, "USD", 94.1997,
+         "https://calculator.aws/"),
+
+        ("Azure Database for PostgreSQL", "Central India - centralindia",
+         "Premium SSD | 8 GiB",
+         "1 GB/Month", 0.131, "USD", 94.1997,
+         "https://azure.microsoft.com/en-in/pricing/calculator/"),
+
+        ("Cloud SQL", "Mumbai - asia-south1",
+         "SSD provisioned storage | 10 GiB input (calculator displayed 11 GiB)",
+         "1 GB/Month", 0.203636, "USD", 94.1997,
+         "https://cloud.google.com/products/calculator"),
+    ]
+
+    try:
+        for (service_name, region, configuration, billing_unit,
+             unit_price, currency, exchange_rate, source_url) in pricing_data:
+
+            service = db.query(CloudService).filter_by(
+                service_name=service_name
+            ).first()
+
+            if service is None:
+                continue
+
+            existing = db.query(ServicePrice).filter_by(
+                service_id=service.id,
+                region=region,
+                configuration=configuration
+            ).first()
+
+            if existing is None:
+                db.add(ServicePrice(
+                    service_id=service.id,
+                    region=region,
+                    configuration=configuration,
+                    billing_unit=billing_unit,
+                    unit_price=unit_price,
+                    currency=currency,
+                    exchange_rate_to_inr=exchange_rate,
+                    source_url=source_url,
+                    is_active=True
+                ))
+
+        db.commit()
+        print("ChooseCloud pricing seed completed.")
+
+    finally:
+        db.close()
+
+
+seed_prices()
+
 
 @app.get("/api/health")
 def home():
